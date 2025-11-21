@@ -19,27 +19,34 @@ class LinkedList {
     }
 
     let current = this.node;
-    while (current.nextNode) {
-      current = current.nextNode;
-    }
-
+    while (current.nextNode) current = current.nextNode;
     current.nextNode = newNode;
   }
 
-  // prepend(value) {}
+  prepend(value) {
+    const newNode = new Node(value);
 
-  size() {
-    if (!this.node) return;
-
-    let size = 1;
-    let current = this.node;
-
-    while (current.nextNode) {
-      current = current.nextNode;
-      size++;
+    if (!this.node) {
+      this.node = newNode;
+      return;
     }
 
-    return size;
+    newNode.nextNode = this.node;
+    this.node = newNode;
+  }
+
+  size() {
+    if (!this.node) throw new Error("List is empty.");
+
+    let counter = 0;
+    let current = this.node;
+
+    while (current) {
+      current = current.nextNode;
+      counter++;
+    }
+
+    return counter;
   }
 
   head() {
@@ -48,24 +55,22 @@ class LinkedList {
 
   tail() {
     let current = this.node;
-
-    while (current.nextNode) {
-      current = current.nextNode;
-    }
-
+    while (current.nextNode) current = current.nextNode;
     return current.value;
   }
+
   at(index) {
-    if (!this.node) return;
+    if (index < 0) throw new Error("Index cannot be negative.");
+    if (!this.node) throw new Error("List is empty.");
 
     let current = this.node;
 
-    for (let i = 1; i <= index; i++) {
-      if (!current.nextNode) return "Out of range!";
+    for (let i = 0; i < index; i++) {
+      if (!current) throw new Error("Index is out of range.");
       current = current.nextNode;
     }
 
-    return current.value;
+    return current;
   }
 
   // pop() {}
@@ -73,18 +78,17 @@ class LinkedList {
   // find(value) {}
 
   toString() {
-    if (!this.node) return;
+    if (!this.node) return "null";
 
-    let str = "";
     let current = this.node;
-    str = `( ${current.value} ) -> `;
+    let str = "";
 
-    while (current.nextNode) {
-      str += `( ${current.nextNode.value} ) -> `;
+    while (current) {
+      str += `( ${current.value} ) -> `;
       current = current.nextNode;
     }
-    str += current.nextNode;
 
+    str += "null";
     return str;
   }
 
