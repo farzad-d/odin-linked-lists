@@ -73,12 +73,27 @@ class LinkedList {
     return current;
   }
 
-  // pop() {}
-  // contains(value) {}
+  pop() {
+    let current = this.node;
+    while (current.nextNode.nextNode) current = current.nextNode;
+    current.nextNode = null;
+  }
+
+  contains(value) {
+    let current = this.node;
+
+    while (current) {
+      if (current.value === value) return true;
+      current = current.nextNode;
+    }
+
+    return false;
+  }
+
   // find(value) {}
 
   toString() {
-    if (!this.node) return "null";
+    if (!this.node) return "List is empty.";
 
     let current = this.node;
     let str = "";
