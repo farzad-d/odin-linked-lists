@@ -38,19 +38,20 @@ class LinkedList {
   size() {
     if (!this.node) throw new Error("List is empty.");
 
-    let counter = 0;
+    let count = 0;
     let current = this.node;
 
     while (current) {
+      count++;
       current = current.nextNode;
-      counter++;
     }
 
-    return counter;
+    return count;
   }
 
   head() {
-    return this.node && this.node.value;
+    if (!this.node) throw new Error("List is empty.");
+    return this.node.value;
   }
 
   tail() {
@@ -74,9 +75,20 @@ class LinkedList {
   }
 
   pop() {
+    if (!this.node) throw new Error("List is empty.");
+
+    if (!this.node.nextNode) {
+      const value = this.node.value;
+      this.node = null;
+      return value;
+    }
+
     let current = this.node;
     while (current.nextNode.nextNode) current = current.nextNode;
+
+    const value = current.nextNode.value;
     current.nextNode = null;
+    return value;
   }
 
   contains(value) {
@@ -90,7 +102,20 @@ class LinkedList {
     return false;
   }
 
-  // find(value) {}
+  find(value) {
+    if (!this.node) throw new Error("List is empty.");
+
+    let index = 0;
+    let current = this.node;
+
+    while (current) {
+      if (current.value === value) return index;
+      current = current.nextNode;
+      index++;
+    }
+
+    return null;
+  }
 
   toString() {
     if (!this.node) return "List is empty.";
