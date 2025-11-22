@@ -7,54 +7,32 @@ class Node {
 
 class LinkedList {
   constructor() {
-    this.node = null;
+    this.node = null; // head
   }
 
-  append(value) {
-    const newNode = new Node(value);
+  // Utility methods --------------------------------------------------
 
-    if (!this.node) {
-      this.node = newNode;
-      return;
-    }
-
-    let current = this.node;
-    while (current.nextNode) current = current.nextNode;
-    current.nextNode = newNode;
-  }
-
-  prepend(value) {
-    const newNode = new Node(value);
-
-    if (!this.node) {
-      this.node = newNode;
-      return;
-    }
-
-    newNode.nextNode = this.node;
-    this.node = newNode;
+  isEmpty() {
+    return this.node === null;
   }
 
   size() {
-    if (!this.node) throw new Error("List is empty.");
-
     let count = 0;
     let current = this.node;
-
     while (current) {
       count++;
       current = current.nextNode;
     }
-
     return count;
   }
 
   head() {
-    if (!this.node) throw new Error("List is empty.");
-    return this.node.value;
+    return this.node?.value ?? null;
   }
 
   tail() {
+    if (!this.node) return null;
+
     let current = this.node;
     while (current.nextNode) current = current.nextNode;
     return current.value;
@@ -62,20 +40,60 @@ class LinkedList {
 
   at(index) {
     if (index < 0) throw new Error("Index cannot be negative.");
-    if (!this.node) throw new Error("List is empty.");
 
     let current = this.node;
+    let i = 0;
 
-    for (let i = 0; i < index; i++) {
-      if (!current) throw new Error("Index is out of range.");
+    while (current) {
+      if (i === index) return current;
       current = current.nextNode;
+      i++;
     }
 
-    return current;
+    throw new Error("Index out of range.");
   }
 
+  // Insertion methods --------------------------------------------------
+
+  append(value) {
+    const newNode = new Node(value);
+
+    if (this.isEmpty()) {
+      this.node = newNode;
+      return;
+    }
+
+    let current = this.node;
+    while (current.nextNode) current = current.nextNode;
+
+    current.nextNode = newNode;
+  }
+
+  prepend(value) {
+    const newNode = new Node(value);
+    newNode.nextNode = this.node;
+    this.node = newNode;
+  }
+
+  insertAt(value, index) {
+    if (index < 0) throw new Error("Index cannot be negative.");
+    const newNode = new Node(value);
+
+    if (index === 0) {
+      newNode.nextNode = this.node;
+      this.node = newNode;
+      return;
+    }
+
+    let prev = this.at(index - 1);
+    newNode.nextNode = prev.nextNode;
+    prev.nextNode = newNode;
+  }
+
+  // Removal methods --------------------------------------------------
+
   pop() {
-    if (!this.node) throw new Error("List is empty.");
+    if (this.isEmpty()) return null;
 
     if (!this.node.nextNode) {
       const value = this.node.value;
@@ -91,34 +109,46 @@ class LinkedList {
     return value;
   }
 
+  removeAt(index) {
+    if (index < 0) throw new Error("Index cannot be negative.");
+    if (this.isEmpty()) throw new Error("List is empty.");
+
+    if (index === 0) {
+      this.node = this.node.nextNode;
+      return;
+    }
+
+    const prev = this.at(index - 1);
+    if (!prev.nextNode) throw new Error("Index out of range.");
+    prev.nextNode = prev.nextNode.nextNode;
+  }
+
+  // Search methods --------------------------------------------------
+
   contains(value) {
     let current = this.node;
-
     while (current) {
       if (current.value === value) return true;
       current = current.nextNode;
     }
-
     return false;
   }
 
   find(value) {
-    if (!this.node) throw new Error("List is empty.");
-
-    let index = 0;
+    let i = 0;
     let current = this.node;
-
     while (current) {
-      if (current.value === value) return index;
+      if (current.value === value) return i;
       current = current.nextNode;
-      index++;
+      i++;
     }
-
     return null;
   }
 
+  // Display --------------------------------------------------
+
   toString() {
-    if (!this.node) return "List is empty.";
+    if (this.isEmpty()) return "null";
 
     let current = this.node;
     let str = "";
@@ -128,30 +158,7 @@ class LinkedList {
       current = current.nextNode;
     }
 
-    str += "null";
-    return str;
-  }
-
-  // insertAt(value, index) {}
-
-  removeAt(index) {
-    if (!this.node) throw new Error("List is empty.");
-    if (index < 0) throw new Error("Index is out of range.");
-    if (index === 0) {
-      this.node = this.node.nextNode;
-      return;
-    }
-
-    let prev = null;
-    let current = this.node;
-
-    for (let i = 0; i < index; i++) {
-      prev = current;
-      current = current.nextNode;
-      if (!current) throw new Error("Index is out of range.");
-    }
-
-    prev.nextNode = current.nextNode;
+    return str + "null";
   }
 }
 
