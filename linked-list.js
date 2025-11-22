@@ -133,7 +133,26 @@ class LinkedList {
   }
 
   // insertAt(value, index) {}
-  // removeAt(index) {}
+
+  removeAt(index) {
+    if (!this.node) throw new Error("List is empty.");
+    if (index < 0) throw new Error("Index is out of range.");
+    if (index === 0) {
+      this.node = this.node.nextNode;
+      return;
+    }
+
+    let prev = null;
+    let current = this.node;
+
+    for (let i = 0; i < index; i++) {
+      prev = current;
+      current = current.nextNode;
+      if (!current) throw new Error("Index is out of range.");
+    }
+
+    prev.nextNode = current.nextNode;
+  }
 }
 
 export default LinkedList;
